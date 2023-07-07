@@ -1,0 +1,36 @@
+<%- include("partials/header"); -%>
+<%- include("partials/navbar"); -%>
+
+<style>
+.top-text {
+    padding: 50px;
+    text-align: center;
+    font-size: 2rem;
+    color: #fff;
+}
+.top-text p {
+    color: lightsteelblue;
+}
+.content {
+    display: flex;
+    justify-content: center;
+    border-radius: 1rem;
+    background-color: burlywood;
+    padding: 2rem;
+}
+</style>
+
+<div class="container">
+    <div class="top-text">
+        <h1>My Collections: <%=title%></h1>
+        <p><%=date%></p>
+    </div>
+    <div class="content">
+        <p><%=content%></p>
+    </div>
+</div>
+
+
+
+
+<%- include("partials/footer"); -%>

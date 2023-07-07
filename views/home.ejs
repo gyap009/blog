@@ -1,15 +1,59 @@
 <%- include('partials/header') %>
-
 <%- include('partials/navbar') %>
 
 <style>
+.container {
+    background-color: rbga(255, 255, 255, 0.5);
+    color: white;
+}
+.top-text {
+    padding: 50px;
+    text-align: center;
+    font-size: 2rem;
+    color: #fff;
+}
+.top-text p {
+    color: lightsteelblue;
+}
+.card{
+    background-color: rgba(0,0,0,.2);
+    padding: 20px 80px;
+}
+.card p {
+    margin: 0 0 20px 20px;
+}
+h3 {
+    color: lightblue;
+    margin-top: 20px;
+}
+h5{
+    color:teal;
+    margin-bottom: 10px;
+}
 
 </style>
 
 
+<div class="container">
+    <div class="top-text">
+        <h1>My Collections</h1>
+        <p>Embark on a journey through the depths of your thoughts.</p>
+    </div>
 
-<div>
+    <div class="card">
+        <% posts.forEach(function(post){ %>
 
+            <h3><%=post.title%></h3>
+            <h5><%=post.date%></h5>
+            <p>
+                <%=post.content.substring(0, 100) + " ..."%>
+                <a href="/posts/<%=post._id%>">Read More</a>
+            </p>
+        
+        <% }) %>
+    </div>
+
+    
 </div>
 
 <%- include('partials/footer') %>

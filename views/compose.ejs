@@ -1,23 +1,49 @@
-<%- include("partials/header"); -%>
-<%- include("partials/navbar"); -%>
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
 
 <style>
-
+.top-text {
+    padding: 50px;
+    text-align: center;
+    font-size: 2rem;
+    color: #fff;
+}
+.top-text p {
+    color: lightsteelblue;
+}
+body {
+    color: white;
+}
+.form-control {
+    display: flex;
+    margin: 0.5rem 0;
+}
+.headings{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+}
 </style>
 
 <div class="container">
-  
-  <!-- <h1>Compose Your Article</h1>
+    <div class="top-text">
+        <h1>Compose A Blog</h1>
+        <p>Track your personal growth</p>
+    </div>
+
     <form class="" action="/compose" method="post">
-      <div class="form-group">
-        <label>Title</label>
-        <input class="form-control" type="text" name="postTitle">
-        <label>Post</label>
-        <textarea class="form-control" name="postBody" rows="5" cols="30"></textarea>
-      </div>
-      <button class="btn btn-primary" type="submit" name="button">Publish</button>
-    </form> -->
+        <div class="form-group">
+            <div class="headings">
+                <input class="form-control" type="text" name="postTitle" placeholder="Blog title">
+                <input class="form-control" type="date" name="postDate">
+            </div>
+            <textarea class="form-control" name="postBody" rows="5" cols="30" placeholder="Enter your post."></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit" name="button">Publish</button>
+    </form>
 
 </div>
 
-<%- include("partials/footer"); -%>
+<%- include('partials/footer') %>
