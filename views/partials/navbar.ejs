@@ -1,0 +1,49 @@
+
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background-image: url("../images/mountains-2.jpg"); 
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .navbar {
+        background-color: rgba(255,255,255,0);
+        width: 100%;
+        height: 75px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 30px 10%;
+    }
+
+    .navbar-brand {
+        display: inline-block;
+        padding: 0px 20px;
+        color: white;
+        cursor: pointer;
+    }
+
+    .link-1:hover, .link-2:hover, .link-3:hover {
+        border-top: 2px solid #ffffff;
+        border-bottom: 2px solid #ffffff;
+        color: white;
+        transition: all 0.2s ease 0s;
+    }
+
+</style>
+
+<div>
+    <nav class="navbar">
+        <a class="navbar-brand link-1" href="/home">Home</a>
+        <a class="navbar-brand link-2" href="/compose">Compose</a>
+        <a class="navbar-brand link-3" href="/memories">Memories</a>
+        <button type="button" class="btn btn-outline-light">Log Out</button>
+    </nav>
+</div>
