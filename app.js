@@ -8,6 +8,11 @@ const mongoose = require('mongoose');
 const lodash = require("lodash");
 const axios = require('axios');
 const Post = require('./models/schema');
+const session = require('express-session');
+const passport = require('passport');
+const passportLocalMongoose = require("passport-local-mongoose");
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const findOrCreate = require("mongoose-findorcreate");
 
 const app = express();
  
@@ -16,6 +21,13 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/static', express.static(path.join(__dirname, 'public')));
 app.use("/images", express.static('images'));
+app.use(session({
+    secret: "Our little secret.",
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 const apiKey = process.env.OPENAI_API_KEY;
 const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
@@ -26,26 +38,105 @@ mongoose.connect("mongodb://127.0.0.1:27017/personalBlogDB", {useNewUrlParser: t
 .then(() => {console.log('Connected to MongoDB');})
 .catch((error) => {console.error('Error connecting to MongoDB:', error);});    
 
+////////////////////// Authentication //////////////////
+const userSchema = new mongoose.Schema({
+    email: String,
+    password: String,
+    googleId: String
+});
+
+userSchema.plugin(passportLocalMongoose);
+userSchema.plugin(findOrCreate);
+
+const User = new mongoose.model("User", userSchema);
+
+passport.use(User.createStrategy()); // Configure Passport/Passport-Local
+
+// Only needed when using cookie sessions:
+passport.serializeUser(function(user, cb) {
+    process.nextTick(function() {
+      return cb(null, {
+        id: user.id,
+        username: user.username,
+        picture: user.picture
+      });
+    });
+});
+  
+passport.deserializeUser(function(user, cb) {
+    process.nextTick(function() {
+      return cb(null, user);
+    });
+});
+
+passport.use(new GoogleStrategy({
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/google/personalblog",
+    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo" 
+    },
+    function(accessToken, refreshToken, profile, cb) {
+        // console.log(profile);
+        User.findOrCreate({googleId: profile.id}, function (err, user) {
+            return cb(err, user);
+        });
+    }
+));
+
 ////////////////////// Routes //////////////////////
 
 app.get("/", function(req,res){
     res.render("login");
 })
 
+app.get('/auth/google',
+    // Use passport to authenticate user using google Strategy as outlined above
+    passport.authenticate('google', { scope: ["profile"] })
+);
+
+app.get("/auth/google/personalblog", 
+    passport.authenticate('google', { failureRedirect: "/" }),
+    function(req, res) {
+        // Successful authentication, redirect to secrets.
+        res.redirect("/home");
+});
+
 app.get("/register", function(req, res){
     res.render("register");
 })
 
-app.post("/register", function(req, res){
-    res.render("register");
-})
+// Save user-information to database
+app.post("/register", function(req, res) {
+    // use method from passport-local-mongoose package
+    User.register({username: req.body.email}, req.body.password, function(err, user){
+        if (err) {
+            console.log(err);
+            res.redirect("/register");
+        } else {
+            passport.authenticate("local")(req, res, function(){
+                res.redirect("/home");
+            });
+        }
+    })
+});
 
-// app.get("/auth/google/secrets"
-//     // , passport.authenticate('google', { failureRedirect: "/login" })
-//     ,function(req, res) {
-//     // Successful authentication, redirect to secrets.
-//     res.redirect("/home");
-// });
+app.post("/", function(req, res){
+    const user = new User ({
+        usename: req.body.username,
+        password: req.body.password
+    });
+
+    // Use Passport to login and authenticate
+    req.login(user, function(err) {
+        if (err) { 
+            console.log(err); 
+        } else {
+            passport.authenticate("local")(req, res, function(){
+                res.redirect("/");
+            });
+        } 
+    });
+})
 
 app.get("/compose", function(req, res){
     res.render("compose")
@@ -67,12 +158,16 @@ app.post("/compose", function(req, res) {
 })
 
 app.get("/home", function(req, res) {
-    Post.find({})
-    .then(function(posts){ 
-        res.render("home", {posts:posts}); // Pass "Posts" collection to "home"
-    }).catch(function(err){
-        console.log(err);
-    });
+    if (req.isAuthenticated()){
+        Post.find({})
+        .then(function(posts){ 
+            res.render("home", {posts:posts}); // Pass "Posts" collection to "home"
+        }).catch(function(err){
+            console.log(err);
+        });
+    } else {
+        res.redirect("/");
+    }
 })
 
 app.post("/home", function(req, res) {
@@ -182,9 +277,12 @@ app.post("/posts/:postId/edit", function(req, res) {
     });
 })
 
-app.post("/loggout", function(req, res) {
-    res.redirect("/");
-})
+app.get('/logout', function(req, res){
+    req.logout(function(err) {
+      if (err) { console.log(err); }
+      res.redirect('/');
+    });
+});
 
 app.listen(3000, function() {
     console.log("Server started on port 3000");
