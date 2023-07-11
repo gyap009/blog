@@ -28,14 +28,19 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+// app.use(
+//     cors({
+//       origin: ["http://localhost:3000", process.env.ORIGIN],
+//     })
+// );
 
 const apiKey = process.env.OPENAI_API_KEY;
 const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
 
 ////////////////////// Initialise MongoDB collection ///////////////////
 
-mongoose.connect("mongodb://127.0.0.1:27017/personalBlogDB", {useNewUrlParser: true})
-.then(() => {console.log('Connected to MongoDB');})
+mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true})
+.then(() => {console.log('Connected to database');})
 .catch((error) => {console.error('Error connecting to MongoDB:', error);});    
 
 ////////////////////// Authentication //////////////////
@@ -264,14 +269,12 @@ app.get("/posts/:postId/edit", function(req,res) {
 app.post("/posts/:postId/edit", function(req, res) {
     const oldrequestedPostId = req.params.postId;
     const requestedPostId = oldrequestedPostId.substring(1, oldrequestedPostId.length);
-    console.log("post id is: "+oldrequestedPostId);
-    
+
     Post.findOneAndUpdate({_id: oldrequestedPostId}, {$set: {title: req.body.title, date: req.body.date, content: req.body.content}}, { returnOriginal: false }, {new: false})
     .then(function(post){
-        console.log('Post updated successfully after edit made:', post);
+        // console.log('Post updated successfully after edit made:', post);
         res.redirect("/home");
     }).catch(function(err){
-        console.log("WRONG: " + requestedPostId);
         console.log("Error is at edit-POST: ")
         console.log(err);
     });
@@ -284,6 +287,6 @@ app.get('/logout', function(req, res){
     });
 });
 
-app.listen(3000, function() {
-    console.log("Server started on port 3000");
-});
+app.listen(process.env.PORT || "8080", function () { 
+    console.log("Server started.");
+}); 
