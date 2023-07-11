@@ -15,8 +15,15 @@
     display: flex;
     justify-content: center;
     border-radius: 1rem;
-    background-color: burlywood;
+    background-color: lightblue;
     padding: 2rem;
+}
+.btn {
+    margin: 20px
+}
+.buttons {
+    display: flex;
+    justify-content: center;
 }
 </style>
 
@@ -25,12 +32,21 @@
         <h1>My Collections: <%=title%></h1>
         <p><%=date%></p>
     </div>
+
     <div class="content">
         <p><%=content%></p>
     </div>
+
+    <div class="buttons">
+        <form action="/posts/:<%=postId%>/edit" method="GET">
+            <button type="btn submit" class="btn btn-dark">Edit</button> 
+        </form> 
+        
+        <form action="posts/:<%=postId%>/delete" method="POST">
+            <button type="btn submit" class="btn btn-dark">Delete</button>  
+        </form> 
+    </div>
+       
 </div>
-
-
-
 
 <%- include("partials/footer"); -%>

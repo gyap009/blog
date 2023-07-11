@@ -47,35 +47,35 @@
 
     .button {
         display: flex;
-        justify-content: center;
-        align-items: center;
+        padding-right: 20px;       
     }
     
     .btn {
         margin: auto;
     }
-
-
 </style>
 
 
 <div class="container">
     <div class="background-1">
-        <form action="/home" method="POST">
+        <form action="/home" method="GET">
             <h2 class="signin-text">Sign In</h2>
             <div class="form-group">
               <input type="email" class="form-control" placeholder="Email" name="email">
               <input type="password" class="form-control" name="password" placeholder="Password">
             </div>
             
-            <div class="button">
-                <button type="submit" class="btn btn-dark register">Register</button>
-                <button type="submit" class="btn btn-dark">Login</button>    
+            <div class="button">  
+                <form action="/home" method="GET">
+                    <button type="submit" class="btn btn-dark">Login</button> 
+                </form>             
+                <form action="/register" method="GET">
+                    <button type="submit" class="btn btn-dark">Register</button>
+                </form>  
             </div>
-
-        </form>            
+        </form> 
+                  
     </div>
-    
 </div>
 
 <%- include('partials/footer') %>

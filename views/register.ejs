@@ -1,14 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-</head>
-<body>
-    <div class="login">
+<%- include('partials/header') %>
+
+<style>
+    body {
+        background-image: url("../images/mountains.jpg"); /* background-image: url("http://localhost:3000/images/welcome.jpg"); */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        transition: .5s;
+    }
+    .container {
+        position: relative;
+        width: 50rem;
+        height: 31.25rem;
+        margin: 20px;      
+    }
+    .background-1 {
+        position: absolute center;
+        top: 40px;
+        display: flex;
+        flex-direction: column;
+
+        justify-content: center;
+        align-items: center;
+        height: 420px;
+        background: rgba(255,255,255,.2);
+        box-shadow: 0px 5px 45px rgba(0,0,0,.5);
+    }
+    h2 {
+        display: flex;
+    }
+    .button {
+        display: flex;
+    }
+    
+    .form-control {
+        border-radius: 1rem;
+        background: rgba(0,0,0,.5);
+        margin: 2rem 0 2rem 0;       
+    }
+
+    .signin-text {
+        text-align: center;
+    }
+    
+    .btn {
+        margin: 20px auto 20px 20px;
+    }
+    .card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 2rem;
+        border-radius: 20px;
+    }
+    .card-body {
+        position: relative;
+        right: 20px;
+        bottom: 16px;
+        height: 5rem;
+        margin: 10px;
+    }
+
+</style>
+
+<div class="container">
+    <div class="background-1">
+        <h2 class="signin-text">Create your account</h2>
+        
+        <form action="/register" method="POST">
+            <div class="form-group">
+              <input type="email" class="form-control" placeholder="Email" name="email">
+              <input type="password" class="form-control" name="password" placeholder="Password">              
+            </div>
+            
+            <div class="card social-block">
+                <div class="card-body">
+                  <a class="btn btn-block btn-social btn-google" href="/auth/google" role="button">
+                    <i class="fab fa-google"></i> Continue with Google
+                  </a>
+                </div>
+            </div>
+            
+        </form> 
+        
+        <div class="button">
+            <form action="/" method="GET">
+                <button type="submit" class="btn btn-dark">Sign In</button>
+            </form>
+            <form action="/home" method="GET">
+                <button type="submit" class="btn btn-dark">Sign Up</button>
+            </form>
+        </div>
 
     </div>
-    
-</body>
-</html>
+</div>
+
+<%- include('partials/footer') %>

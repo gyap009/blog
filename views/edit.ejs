@@ -1,0 +1,51 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<style>
+
+.top-text {
+    padding: 50px;
+    text-align: center;
+    font-size: 2rem;
+    color: #fff;
+}
+.top-text p {
+    color: lightsteelblue;
+}
+
+.form-control {
+    display: flex;
+    margin: 0.5rem 0;
+}
+.headings{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+}
+</style>
+
+<div class="container">
+    <div class="top-text">
+        <h1>Edit Your Blog</h1>
+        <p>Improve your perspectives</p>
+    </div>
+
+    <form action="/posts/<%=postId%>/edit" method="GET">
+        <div class="form-group">
+            <div class="headings">
+                <input class="form-control" type="text" name="postTitle" value="<%=title%>">
+                <input class="form-control" type="date" name="postDate" value="<%=date%>">
+            </div>
+            <textarea class="form-control" name="postBody" rows="5" cols="30"><%=content%></textarea>
+        </div>
+    </form>
+
+    <form action="/posts/<%=postId%>/edit" method="POST">
+        <button class="btn btn-primary" type="submit" name="button">Save and Publish</button>
+    </form>
+
+</div>
+
+<%- include('partials/footer') %>
